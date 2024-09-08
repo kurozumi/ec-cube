@@ -2,7 +2,6 @@
 
 namespace Customize\Command;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Common\EccubeConfig;
 use Eccube\Service\PluginService;
@@ -26,13 +25,11 @@ class InstallCommand extends Command
 
     protected Filesystem $fs;
 
-    protected Connection $connection;
-
     protected SystemService $systemService;
 
     protected EntityManagerInterface $entityManager;
 
-    private EccubeConfig $eccubeConfig;
+    protected EccubeConfig $eccubeConfig;
 
     protected PluginService $pluginService;
 
@@ -56,7 +53,6 @@ class InstallCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->fs = new Filesystem();
-        $this->connection = $this->entityManager->getConnection();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -74,7 +70,7 @@ class InstallCommand extends Command
         $this->io->info('DB削除');
         try {
             $connection = $this->entityManager->getConnection();
-            $stmt = $connection->prepare('DROP DATABASE IF EXISTS ' . $this->connection->getDatabase());
+            $stmt = $connection->prepare('DROP DATABASE IF EXISTS ' . $connection->getDatabase());
             if ($result = $stmt->executeQuery()) {
                 $this->io->success('DROP DATABASE > OK');
                 $result->free();
