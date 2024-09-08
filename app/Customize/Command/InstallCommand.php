@@ -140,11 +140,8 @@ class InstallCommand extends Command
 
         $this->io->info('install plugin');
         foreach ($plugins as $code => $data) {
-            try {
-                $this->pluginService->installWithCode($code);
-            } catch (\Exception $exception) {
-                $this->io->error($exception->getMessage());
-            }
+            $command = ['bin/console', 'eccube:plugin:install', '--code', $code];
+            $this->runCommand($command);
         }
 
         $command = ['bin/console', 'eccube:generate:proxies'];
@@ -220,6 +217,25 @@ class InstallCommand extends Command
             'ApproveCustomer42' => ['ApproveCustomer4', '4.2'],
             'ProductPayment42' => ['ProductPayment4', '4.2'],
             'DeliveryFreeManagement42' => ['DeliveryFreeManagement', '4.2'],
+            'CancelMail' => ['CancelMail', '4.3'],
+            'BundleSale42' => ['BundleSale4', '4.2'],
+            'LoginTargetPath' => ['LoginTargetPath', '4.3'],
+            'CloudflareTurnstile' => ['cloudflare-turnstile-eccube-plugin', 'main'],
+            'MembersOnly42' => ['MembersOnly4', '4.2'],
+            'ErrorPage' => ['ErrorPage', 'main'],
+            'LoginInstead' => ['LoginInstead', 'main'],
+            'EmailEntry42' => ['EmailEntry4', '4.2'],
+            'ProductSort42' => ['ProductSort4', '4.2'],
+            'DisableNonMemberProduct42' => ['DisableNonMemberProduct4', '4.2'],
+            'ReOrder42' => ['ReOrder4', '4.2'],
+            'ProductListFavBtn42' => ['ProductListFavBtn4', '4.2'],
+            'MultiCategorySearch42' => ['MultiCategorySearch4', '4.2'],
+            'RecommendedProducts42' => ['RecommendedProducts4', '4.2'],
+            'ResizeImage42' => ['ResizeImage4', '4.2'],
+            'CartSkip42' => ['CartSkip4', '4.2'],
+            'PurchaseLimit42' => ['PurchaseLimit4', '4.2'],
+            'PrivateURL42' => ['PrivateURL4', '4.2'],
+            'PasswordProtectedProduct42' => ['PasswordProtectedProduct4', '4.2'],
         ];
     }
 
