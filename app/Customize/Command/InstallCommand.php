@@ -125,16 +125,24 @@ class InstallCommand extends Command
         }
 
         $this->io->info('composer install');
-        $command = ['composer', 'install'];
-        $this->runCommand($command);
+        $commands = [
+            ['composer', 'install'],
+            ['composer', 'require', 'liip/imagine-bundle'],
+            ['composer', 'require', 'aws/aws-sdk-php'],
+        ];
+        foreach ($commands as $command) {
+            $this->runCommand($command);
+        }
 
         $this->io->info('clone plugin');
         $plugins = $this->getPlugins();
         foreach ($plugins as $code => $data) {
-            if ($this->fs->exists($this->projectDir . '/app/Plugin/' . $code)) {
-                continue;
+            $dir = $this->projectDir . '/app/Plugin/' . $code;
+            if ($this->fs->exists($dir)) {
+                $command = ['cd', $dir, '&&', 'git', 'pull'];
+            } else {
+                $command = ['git', 'clone', 'git@github.com:kurozumi/' . $data[0] . '.git', '-b', $data[1], 'app/Plugin/' . $code];
             }
-            $command = ['git', 'clone', 'git@github.com:kurozumi/' . $data[0] . '.git', '-b', $data[1], 'app/Plugin/' . $code];
             $this->runCommand($command);
         }
 
