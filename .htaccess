@@ -80,9 +80,6 @@ DirectoryIndex index.php index.html .ht
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !^(.*)\.(gif|png|jpe?g|css|ico|js|svg|map)$ [NC]
     RewriteRule ^(.*)$ index.php [QSA,L]
-
-    RewriteCond %{http_host} ^v4.eccube-plugin.net
-    RewriteRule ^(.*) https://demo.eccube-plugin.net/$1 [R=301,L]
 </IfModule>
 <IfModule mod_mime.c>
   # 拡張子.webpファイルはContent-Typeとしてimage/webpを返す
