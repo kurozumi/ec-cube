@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of EC-CUBE Demo
+ *
+ * Copyright(c) Akira Kurozumi All Rights Reserved.
+ *
+ * https://a-zumi.net
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Customize\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,12 +45,11 @@ class InstallCommand extends Command
     protected PluginService $pluginService;
 
     public function __construct(
-        SystemService          $systemService,
+        SystemService $systemService,
         EntityManagerInterface $entityManager,
-        EccubeConfig           $eccubeConfig,
-        PluginService          $pluginService
-    )
-    {
+        EccubeConfig $eccubeConfig,
+        PluginService $pluginService
+    ) {
         parent::__construct();
 
         $this->projectDir = $eccubeConfig->get('kernel.project_dir');
@@ -64,17 +74,18 @@ class InstallCommand extends Command
         $databaseUrl = getenv('DATABASE_URL');
         if (false === $this->isMySQL($databaseUrl)) {
             $this->systemService->switchMaintenance();
+
             return Command::INVALID;
         }
 
         $this->io->info('DB削除');
         try {
             $connection = $this->entityManager->getConnection();
-            $stmt = $connection->prepare('DROP DATABASE IF EXISTS ' . $connection->getDatabase());
+            $stmt = $connection->prepare('DROP DATABASE IF EXISTS '.$connection->getDatabase());
             if ($result = $stmt->executeQuery()) {
                 $this->io->success('DROP DATABASE > OK');
                 $result->free();
-            };
+            }
         } catch (\Exception $exception) {
             $this->io->error($exception->getMessage());
         }
@@ -92,7 +103,7 @@ class InstallCommand extends Command
 
         $this->io->info('データ投入');
         $finder = Finder::create()
-            ->in(__DIR__ . '/Fixtures/sql')
+            ->in(__DIR__.'/Fixtures/sql')
             ->name('*.sql');
         foreach ($finder->getIterator() as $fixture) {
             $sql = file_get_contents($fixture->getPathname());
@@ -133,11 +144,11 @@ class InstallCommand extends Command
         $this->io->info('clone plugin');
         $plugins = $this->getPlugins();
         foreach ($plugins as $code => $data) {
-            $dir = $this->projectDir . '/app/Plugin/' . $code;
+            $dir = $this->projectDir.'/app/Plugin/'.$code;
             if ($this->fs->exists($dir)) {
                 $command = ['cd', $dir, '&&', 'git', 'pull'];
             } else {
-                $command = ['git', 'clone', 'git@github.com:kurozumi/' . $data[0] . '.git', '-b', $data[1], 'app/Plugin/' . $code];
+                $command = ['git', 'clone', 'git@github.com:kurozumi/'.$data[0].'.git', '-b', $data[1], 'app/Plugin/'.$code];
             }
             $this->runCommand($command);
         }
@@ -162,13 +173,13 @@ class InstallCommand extends Command
 
     protected function deleteFile(string $path): void
     {
-        foreach (glob($this->projectDir . $path) as $dir) {
-            if ($dir === $this->projectDir . '/html/user_data/assets') {
+        foreach (glob($this->projectDir.$path) as $dir) {
+            if ($dir === $this->projectDir.'/html/user_data/assets') {
                 continue;
             }
             try {
                 $this->fs->remove($dir);
-                $this->io->success("REMOVE > " . $dir);
+                $this->io->success('REMOVE > '.$dir);
             } catch (\Exception $exception) {
                 $this->io->error($exception->getMessage());
             }
@@ -177,10 +188,10 @@ class InstallCommand extends Command
 
     protected function copyFile(string $originDir, string $targetDir): void
     {
-        foreach (glob(__DIR__ . $originDir) as $dir) {
+        foreach (glob(__DIR__.$originDir) as $dir) {
             try {
-                $this->fs->mirror($dir, $this->projectDir . $targetDir, null, ['override' => true]);
-                $this->io->success('COPY > ' . $dir);
+                $this->fs->mirror($dir, $this->projectDir.$targetDir, null, ['override' => true]);
+                $this->io->success('COPY > '.$dir);
             } catch (\Exception $exception) {
                 $this->io->error($exception->getMessage());
             }

@@ -1,7 +1,18 @@
 <?php
 
+/*
+ * This file is part of EC-CUBE Demo
+ *
+ * Copyright(c) Akira Kurozumi All Rights Reserved.
+ *
+ * https://a-zumi.net
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 if (php_sapi_name() !== 'cli') {
-    throw new \LogicException();
+    throw new LogicException();
 }
 
 $header = <<<EOL
@@ -28,15 +39,13 @@ $rules = [
     'header_comment' => ['header' => $header],
 ];
 
-$finder = \PhpCsFixer\Finder::create()
-    ->in(__DIR__.'/src')
-    ->in(__DIR__.'/tests')
-    ->in(__DIR__.'/app')
-    ->in(__DIR__.'/codeception')
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__)
     ->name('*.php')
 ;
-$config = new \PhpCsFixer\Config();
+$config = new PhpCsFixer\Config();
+
 return $config
     ->setRules($rules)
     ->setFinder($finder)
-    ;
+;

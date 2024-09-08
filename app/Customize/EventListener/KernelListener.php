@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of EC-CUBE Demo
+ *
+ * Copyright(c) Akira Kurozumi All Rights Reserved.
+ *
+ * https://a-zumi.net
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Customize\EventListener;
 
 use Eccube\Entity\Plugin;
@@ -25,11 +36,10 @@ class KernelListener implements EventSubscriberInterface
     protected SystemService $systemService;
 
     public function __construct(
-        CacheUtil     $cacheUtil,
-        Context       $requestContext,
+        CacheUtil $cacheUtil,
+        Context $requestContext,
         SystemService $systemService
-    )
-    {
+    ) {
         $this->cacheUtil = $cacheUtil;
         $this->requestContext = $requestContext;
         $this->systemService = $systemService;
@@ -45,8 +55,8 @@ class KernelListener implements EventSubscriberInterface
                 ['onKernelTerminate', -256],
             ],
             KernelEvents::CONTROLLER_ARGUMENTS => [
-                ['onKernelControllerArguments']
-            ]
+                ['onKernelControllerArguments'],
+            ],
         ];
     }
 
