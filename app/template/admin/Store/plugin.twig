@@ -1,0 +1,64 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['store', 'plugin', 'plugin_list'] %}
+
+{% block title %}{{'admin.store.plugin.809'|trans}}{% endblock %}
+{% block sub_title %}{{'admin.store.plugin.810'|trans}}{% endblock %}
+
+{% block javascript %}
+    <script>
+        function changeActionSubmit(action, form_name) {
+            document.forms[form_name].action = action;
+            document.forms[form_name].submit();
+            return false;
+        }
+    </script>
+{% endblock javascript %}
+
+{% block sheetsheet %}
+    <style type="text/css">
+        table a.plugin-image:hover {
+            text-underline: none;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header">
+                        <h5 class="box-title mb-3">{{ 'admin.store.plugin.812'|trans }}</h5>
+                        <p class="text-danger">他社無料プラグインと一緒に動作確認したいプラグインがありましたらインストールしますので<a href='https://a-zumi.net/contact/' target='_blank'><b>こちら</b></a>からお問い合わせ下さい。</p>
+                    </div>
+                    {{ include('@admin/Store/plugin_table_official.twig', {'Plugins': officialPlugins}) }}
+
+                </div>
+
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header">
+                        <h5 class="box-title mb-3">{{ 'admin.store.plugin.814'|trans }}</h5>
+                        <p class='alert alert-danger'>
+                            プラグインを確認したら必ず無効化してください。いろんな方が動作確認しています。<br/>
+                            プラグインの有効化または無効化したあとは必ず<a href='{{ url("admin_content_cache") }}'><b>キャッシュクリア</b></a>して下さい。<br/>
+                            あずみ.net開発のプラグインで動作確認したいプラグインがありましたらインストールしますので<a href='https://a-zumi.net/contact/' target='_blank'><b>こちら</b></a>からお問い合わせ下さい。
+                        </p>
+                    </div>
+                    {{ include('@admin/Store/plugin_table.twig', {'Plugins': unofficialPlugins}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+monolog:
+  channels: ['enabled-plugin']
+  handlers:
+    enabled_plugin:
+      type: fingers_crossed
+      action_level: error
+      passthru_level: info
+      handler: enabled_plugin_rotating_file
+      channels: [ 'enabled-plugin' ]
+    enabled_plugin_rotating_file:
+      type: rotating_file
+      max_files: 60
+      path: '%kernel.logs_dir%/%kernel.environment%/enabled-plugin.log'
+      formatter: enabled_plugin.log.formatter.line
+      level: debug
+
+services:
+  enabled_plugin.log.formatter.line:
+    class: Monolog\Formatter\LineFormatter
+    arguments:
+      - "[%%datetime%%] %%channel%%.%%level_name%% %%message%% %%context%% [%%extra.http_method%%, %%extra.url%%, %%extra.ip%%, %%extra.referrer%%, %%extra.user_agent%%]\n"
