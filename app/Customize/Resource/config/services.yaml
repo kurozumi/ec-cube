@@ -19,3 +19,9 @@ services:
     class: Monolog\Formatter\LineFormatter
     arguments:
       - "[%%datetime%%] %%channel%%.%%level_name%% %%message%% %%context%% [%%extra.http_method%%, %%extra.url%%, %%extra.ip%%, %%extra.referrer%%, %%extra.user_agent%%]\n"
+
+framework:
+  webhook:
+    routing:
+      deploy:
+        service: Customize\Webhook\GithubParser

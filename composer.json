@@ -19,6 +19,7 @@
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-zip": "*",
+        "aws/aws-sdk-php": "^3.321",
         "composer/ca-bundle": "^1.1",
         "composer/composer": "^2.0",
         "doctrine/annotations": "^2.0",
@@ -41,6 +42,7 @@
         "friendsofphp/php-cs-fixer": "^3.8",
         "guzzlehttp/guzzle": "^7.4.5",
         "knplabs/knp-paginator-bundle": "^5.8",
+        "liip/imagine-bundle": "^2.13",
         "mobiledetect/mobiledetectlib": "^2.8",
         "monolog/monolog": "^2.5",
         "nesbot/carbon": "^3",
@@ -85,6 +87,7 @@
         "symfony/property-access": "^6.4",
         "symfony/proxy-manager-bridge": "^6.4",
         "symfony/rate-limiter": "^6.4",
+        "symfony/remote-event": "^6.4",
         "symfony/routing": "^6.4",
         "symfony/security-bundle": "^6.4",
         "symfony/serializer": "^6.4",
@@ -96,6 +99,7 @@
         "symfony/validator": "^6.4",
         "symfony/var-dumper": "^6.4",
         "symfony/web-profiler-bundle": "^6.4",
+        "symfony/webhook": "^6.4",
         "symfony/workflow": "^6.4",
         "symfony/yaml": "^6.4",
         "tecnickcom/tcpdf": "^6.2",
@@ -185,7 +189,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.1.0"
+            "php": "8.2.12"
         },
         "preferred-install": {
             "*": "dist"
@@ -197,6 +201,17 @@
             "kylekatarnls/update-helper": true,
             "ec-cube/plugin-installer": true,
             "symfony/flex": true
+        }
+    },
+    "repositories": {
+        "eccube": {
+            "type": "composer",
+            "url": "https://package-api-c2.ec-cube.net/v43",
+            "options": {
+                "http": {
+                    "header": ["X-ECCUBE-KEY: bXVijUH2bqdmKg7qNjTsIMe0DeYPMKsa0tmtqoWz"]
+                }
+            }
         }
     }
 }
