@@ -18,6 +18,8 @@ final class GithubRequestParser extends AbstractRequestParser
 {
     protected function getRequestMatcher(): RequestMatcherInterface
     {
+        var_dump(1);
+        exit();
         return new ChainRequestMatcher([
             new HostRequestMatcher('github.com'),
             new IsJsonRequestMatcher(),
@@ -42,9 +44,6 @@ final class GithubRequestParser extends AbstractRequestParser
     protected function validateSignature(HeaderBag $headers, string $body, #[\SensitiveParameter] string $secret): void
     {
         $signature = hash_hmac('sha256', $body, $secret);
-        var_dump(hash_equals($signature, $headers->get('X-Hub-Signature-256')));
-        var_dump($signature);
-        var_dump($headers->get('X-Hub-Signature-256'));
         if (!hash_equals($signature, $headers->get('X-Hub-Signature-256'))) {
             throw new RejectWebhookException(406, 'Invalid signature');
         }
