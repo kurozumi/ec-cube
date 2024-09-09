@@ -30,7 +30,7 @@ final class GithubRequestParser extends AbstractRequestParser
     protected function getRequestMatcher(): RequestMatcherInterface
     {
         return new ChainRequestMatcher([
-            new HostRequestMatcher('github\.com'),
+            new HostRequestMatcher('github.com'),
             new IsJsonRequestMatcher(),
             new MethodRequestMatcher(Request::METHOD_POST),
         ]);
