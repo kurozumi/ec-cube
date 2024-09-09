@@ -23,5 +23,5 @@ services:
 framework:
   webhook:
     routing:
-      deploy:
+      push:
         service: Customize\Webhook\GithubParser
