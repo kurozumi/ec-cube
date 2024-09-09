@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher\IsJsonRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher\MethodRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\RemoteEvent\RemoteEvent;
 use Symfony\Component\Webhook\Client\AbstractRequestParser;
@@ -22,6 +23,7 @@ final class GithubRequestParser extends AbstractRequestParser
             new HostRequestMatcher('github.com'),
             new IsJsonRequestMatcher(),
             new MethodRequestMatcher(Request::METHOD_POST),
+            new PathRequestMatcher('^/'),
         ]);
     }
 
