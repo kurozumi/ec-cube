@@ -20,13 +20,13 @@ services:
     arguments:
       - "[%%datetime%%] %%channel%%.%%level_name%% %%message%% %%context%% [%%extra.http_method%%, %%extra.url%%, %%extra.ip%%, %%extra.referrer%%, %%extra.user_agent%%]\n"
 
+parameters:
+  env(GITHUB_WEbHOOK_SECRET): ''
+  github_webhook_secret: '%env(GITHUB_WEbHOOK_SECRET)%'
+
 framework:
   webhook:
     routing:
       github:
         service: Customize\Webhook\GithubRequestParser
         secret: '%github_webhook_secret%'
-
-parameters:
-  env(GITHUB_WEbHOOK_SECRET): ''
-  github_webhook_secret: '%env(GITHUB_WEbHOOK_SECRET)%'
