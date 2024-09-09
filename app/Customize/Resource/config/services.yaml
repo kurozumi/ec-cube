@@ -23,5 +23,6 @@ services:
 framework:
   webhook:
     routing:
-      push:
-        service: Customize\Webhook\GithubParser
+      github:
+        service: Customize\Webhook\GithubRequestParser
+        secret: '%github_webhook_secret%'
