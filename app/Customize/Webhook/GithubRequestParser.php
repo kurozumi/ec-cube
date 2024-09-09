@@ -18,8 +18,6 @@ final class GithubRequestParser extends AbstractRequestParser
 {
     protected function getRequestMatcher(): RequestMatcherInterface
     {
-        var_dump(1);
-        exit();
         return new ChainRequestMatcher([
             new HostRequestMatcher('github.com'),
             new IsJsonRequestMatcher(),
