@@ -34,7 +34,7 @@ final class GithubRequestParser extends AbstractRequestParser
         );
         return new RemoteEvent(
             name: $request->headers->get('X-GitHub-Event'),
-            id: $request->headers->get('X-GitHub-Event-Id'),
+            id: $request->headers->get('X-GitHub-Hook-ID'),
             payload: $request->getPayload()->all()
         );
     }
