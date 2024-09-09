@@ -26,3 +26,7 @@ framework:
       github:
         service: Customize\Webhook\GithubRequestParser
         secret: '%github_webhook_secret%'
+
+parameters:
+  env(GITHUB_WEbHOOK_SECRET): ''
+  github_webhook_secret: '%env(GITHUB_WEbHOOK_SECRET)%'
