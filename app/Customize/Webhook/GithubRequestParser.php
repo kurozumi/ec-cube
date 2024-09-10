@@ -52,6 +52,7 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validate(Request $request): void
     {
+        var_dump($request->headers->all());
         if (!$this->getRequestMatcher()->matches($request)) {
             throw new RejectWebhookException(406, 'Request does not match.');
         }
