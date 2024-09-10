@@ -72,6 +72,7 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validateHeaders(HeaderBag $headers): void
     {
+        var_dump(1);
         foreach ([$this->signatureHeaderName, $this->eventHeaderName, $this->idHeaderName] as $header) {
             if (!$headers->has($header)) {
                 throw new RejectWebhookException(406, sprintf('Missing "%s" HTTP request signature header.', $header));
