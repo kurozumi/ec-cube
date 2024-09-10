@@ -38,8 +38,6 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function doParse(Request $request, #[\SensitiveParameter] string $secret): ?RemoteEvent
     {
-        var_dump($request->getHost());
-        exit();
         $this->validateSignature(
             headers: $request->headers,
             body: $request->getContent(),
@@ -54,6 +52,8 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validate(Request $request): void
     {
+        var_dump($request->getHost());
+        exit();
         if (!$this->getRequestMatcher()->matches($request)) {
             throw new RejectWebhookException(406, 'Request does not match.');
         }
