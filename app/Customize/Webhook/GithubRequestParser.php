@@ -52,13 +52,7 @@ final class GithubRequestParser extends AbstractRequestParser
     protected function validateSignature(HeaderBag $headers, string $body, #[\SensitiveParameter] string $secret): void
     {
         $signature = $headers->get($this->signatureHeaderName);
-        $event = $headers->get($this->eventHeaderName);
-        $id = $headers->get($this->idHeaderName);
-
-        var_dump($signature);
-        var_dump($this->algo . '=' . hash_hmac($this->algo, $body, $secret));
-        var_dump($secret);
-        if (!hash_equals($signature, $this->algo . '=' . hash_hmac($this->algo, $event . $id . $body, $secret))) {
+        if (!hash_equals($signature, $this->algo . '=' . hash_hmac($this->algo, $body, $secret))) {
             throw new RejectWebhookException(406, 'Signature is wrong.');
         }
     }
