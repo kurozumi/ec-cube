@@ -31,6 +31,7 @@ final class GithubRequestParser extends AbstractRequestParser
     {
         return new ChainRequestMatcher([
             new HostRequestMatcher('github\.com'),
+            new HostRequestMatcher('eccube-plugin\.net'),
             new IsJsonRequestMatcher(),
             new MethodRequestMatcher(Request::METHOD_POST),
         ]);
@@ -52,8 +53,6 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validate(Request $request): void
     {
-        var_dump($request->getHost());
-        exit();
         if (!$this->getRequestMatcher()->matches($request)) {
             throw new RejectWebhookException(406, 'Request does not match.');
         }
