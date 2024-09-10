@@ -25,6 +25,7 @@ final readonly class GithubWebhookConsumer implements ConsumerInterface
     public function consume(RemoteEvent $event): void
     {
         $payload = $event->getPayload();
+        var_dump($payload);
         log_info($event->getName().':'.implode(',', $payload));
     }
 }
