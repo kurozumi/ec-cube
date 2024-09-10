@@ -72,7 +72,6 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validateHeaders(HeaderBag $headers): void
     {
-        var_dump(1);
         foreach ([$this->signatureHeaderName, $this->eventHeaderName, $this->idHeaderName] as $header) {
             if (!$headers->has($header)) {
                 throw new RejectWebhookException(406, sprintf('Missing "%s" HTTP request signature header.', $header));
@@ -82,10 +81,7 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validatePayload(InputBag $payload): void
     {
-        var_dump($payload->get('action'));
-        var_dump(false === $payload->has('action'));
-        var_dump('closed' === $payload->get('action'));
-        if (false === $payload->has('action') || 'closed' === $payload->get('action')) {
+        if ($payload->has('action') && 'closed' !== $payload->get('action')) {
             throw new RejectWebhookException(406, 'Pull Request is not closed.');
         }
     }
