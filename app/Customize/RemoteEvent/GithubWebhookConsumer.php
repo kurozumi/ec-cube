@@ -26,13 +26,6 @@ final readonly class GithubWebhookConsumer implements ConsumerInterface
 {
     public function consume(RemoteEvent $event): void
     {
-        $payload = $event->getPayload();
-
-        // demoブランチじゃないときは何もしない
-        if ('refs/heads/demo' !== $payload['ref']) {
-            return;
-        }
-
         $process = new Process(['git', 'pull']);
         try {
             $process->mustRun(function ($type, $buffer) {

@@ -24,10 +24,13 @@ use Symfony\Component\HttpFoundation\RequestMatcher\MethodRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\RemoteEvent\RemoteEvent;
 use Symfony\Component\Webhook\Client\AbstractRequestParser;
+use Symfony\Component\Webhook\Exception\InvalidArgumentException;
 use Symfony\Component\Webhook\Exception\RejectWebhookException;
 
 final class GithubRequestParser extends AbstractRequestParser
 {
+    public const GIT_REF = 'refs/heads/demo';
+
     public function __construct(
         private readonly string $algo = 'sha256',
         private readonly string $signatureHeaderName = 'X-Hub-Signature-256',
@@ -48,6 +51,22 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function doParse(Request $request, #[\SensitiveParameter] string $secret): ?RemoteEvent
     {
+        if (!$secret) {
+            throw new InvalidArgumentException('A non-empty secret is required.');
+        }
+
+        foreach ([$this->signatureHeaderName, $this->eventHeaderName, $this->idHeaderName] as $header) {
+            if (!$request->headers->has($header)) {
+                throw new RejectWebhookException(406, sprintf('Missing "%s" HTTP request signature header.', $header));
+            }
+        }
+
+        // demoブランチではない場合はエラー
+        $ref = $request->getPayload()->get('ref');
+        if (self::GIT_REF !== $ref) {
+            throw new RejectWebhookException(406, sprintf('Missing "%s".', $ref));
+        }
+
         $this->validateSignature(
             headers: $request->headers,
             body: $request->getContent(),
