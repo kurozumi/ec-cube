@@ -80,6 +80,9 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validatePayload(InputBag $payload): void
     {
+        var_dump($payload->get('action'));
+        var_dump(false === $payload->has('action'));
+        var_dump('closed' === $payload->get('action'));
         if (false === $payload->has('action') || 'closed' === $payload->get('action')) {
             throw new RejectWebhookException(406, 'Pull Request is not closed.');
         }
