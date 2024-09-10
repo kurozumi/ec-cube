@@ -24,13 +24,12 @@ final class GithubRequestParser extends AbstractRequestParser
         private readonly string $idHeaderName = 'X-GitHub-Hook-ID',
     )
     {
-
     }
 
     protected function getRequestMatcher(): RequestMatcherInterface
     {
         return new ChainRequestMatcher([
-            new HostRequestMatcher('eccube-plugin\.net'),
+            new HostRequestMatcher('demo.eccube-plugin.net'),
             new IsJsonRequestMatcher(),
             new MethodRequestMatcher(Request::METHOD_POST),
         ]);
@@ -52,7 +51,6 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validate(Request $request): void
     {
-        var_dump($request->headers->all());
         if (!$this->getRequestMatcher()->matches($request)) {
             throw new RejectWebhookException(406, 'Request does not match.');
         }
@@ -64,7 +62,7 @@ final class GithubRequestParser extends AbstractRequestParser
         $event = $headers->get($this->eventHeaderName);
         $id = $headers->get($this->idHeaderName);
 
-        if (!hash_equals($signature, $this->algo.'='.hash_hmac($this->algo, $event.$id.$body, $secret))) {
+        if (!hash_equals($signature, $this->algo . '=' . hash_hmac($this->algo, $event . $id . $body, $secret))) {
             throw new RejectWebhookException(406, 'Signature is wrong.');
         }
     }
