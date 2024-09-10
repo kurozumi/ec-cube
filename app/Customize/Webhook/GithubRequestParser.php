@@ -35,7 +35,6 @@ final class GithubRequestParser extends AbstractRequestParser
         private readonly string $signatureHeaderName = 'X-Hub-Signature-256',
         private readonly string $eventHeaderName = 'X-GitHub-Event',
         private readonly string $idHeaderName = 'X-GitHub-Hook-ID',
-        private readonly string $gitRef = 'refs/heads/demo'
     )
     {
     }
@@ -82,12 +81,6 @@ final class GithubRequestParser extends AbstractRequestParser
 
     protected function validatePayload(InputBag $payload): void
     {
-        // demoブランチではない場合はエラー
-        $ref = $payload->get('ref');
-        if ($this->gitRef !== $ref) {
-            throw new RejectWebhookException(406, sprintf('Missing "%s".', $ref));
-        }
-
         // プルリクがクローズドされていない場合はエラー
         if (false === $payload->has('action') || 'closed' === $payload->get('action')) {
             throw new RejectWebhookException(406, 'Pull Request is not closed.');
