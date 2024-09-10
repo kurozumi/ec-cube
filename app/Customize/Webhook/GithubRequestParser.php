@@ -29,7 +29,7 @@ final class GithubRequestParser extends AbstractRequestParser
     protected function getRequestMatcher(): RequestMatcherInterface
     {
         return new ChainRequestMatcher([
-            new HostRequestMatcher('demo.eccube-plugin.net'),
+            new HostRequestMatcher('demo\.eccube-plugin\.net'),
             new IsJsonRequestMatcher(),
             new MethodRequestMatcher(Request::METHOD_POST),
         ]);
