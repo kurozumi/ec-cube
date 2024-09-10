@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace Customize\RemoteEvent;
 
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\RemoteEvent\Attribute\AsRemoteEventConsumer;
 use Symfony\Component\RemoteEvent\Consumer\ConsumerInterface;
 use Symfony\Component\RemoteEvent\RemoteEvent;
@@ -25,7 +27,29 @@ final readonly class GithubWebhookConsumer implements ConsumerInterface
     public function consume(RemoteEvent $event): void
     {
         $payload = $event->getPayload();
-        var_dump($payload);
-        log_info($event->getName().':'.implode(',', $payload));
+
+        // demoブランチじゃないときは何もしない
+        if ('refs/heads/demo' !== $payload['ref']) {
+            return;
+        }
+
+        $process = new Process(['git', 'pull']);
+        try {
+            $process->mustRun(function ($type, $buffer) {
+                $buffer = trim($buffer);
+                if (empty($buffer)) {
+                    return;
+                }
+                if (Process::ERR === $type) {
+                    log_error($buffer);
+                } else {
+                    log_info($buffer);
+                }
+                var_dump($buffer);
+            });
+        } catch (ProcessFailedException $exception) {
+            var_dump($exception->getMessage());
+            log_error($exception->getMessage());
+        }
     }
 }
