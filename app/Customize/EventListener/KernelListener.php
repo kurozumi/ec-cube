@@ -48,12 +48,12 @@ class KernelListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-//            KernelEvents::EXCEPTION => [
-//                ['onKernelException', 256],
-//            ],
-//            KernelEvents::TERMINATE => [
-//                ['onKernelTerminate', -256],
-//            ],
+            KernelEvents::EXCEPTION => [
+                ['onKernelException', 256],
+            ],
+            KernelEvents::TERMINATE => [
+                ['onKernelTerminate', -256],
+            ],
             KernelEvents::CONTROLLER_ARGUMENTS => [
                 ['onKernelControllerArguments'],
             ],
