@@ -17,6 +17,7 @@ namespace Customize\Webhook;
 
 use Symfony\Component\HttpFoundation\ChainRequestMatcher;
 use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher\IsJsonRequestMatcher;
@@ -29,13 +30,12 @@ use Symfony\Component\Webhook\Exception\RejectWebhookException;
 
 final class GithubRequestParser extends AbstractRequestParser
 {
-    public const GIT_REF = 'refs/heads/demo';
-
     public function __construct(
         private readonly string $algo = 'sha256',
         private readonly string $signatureHeaderName = 'X-Hub-Signature-256',
         private readonly string $eventHeaderName = 'X-GitHub-Event',
         private readonly string $idHeaderName = 'X-GitHub-Hook-ID',
+        private readonly string $gitRef = 'refs/heads/demo'
     )
     {
     }
@@ -55,17 +55,9 @@ final class GithubRequestParser extends AbstractRequestParser
             throw new InvalidArgumentException('A non-empty secret is required.');
         }
 
-        foreach ([$this->signatureHeaderName, $this->eventHeaderName, $this->idHeaderName] as $header) {
-            if (!$request->headers->has($header)) {
-                throw new RejectWebhookException(406, sprintf('Missing "%s" HTTP request signature header.', $header));
-            }
-        }
+        $this->validateHeaders($request->headers);
 
-        // demoブランチではない場合はエラー
-        $ref = $request->getPayload()->get('ref');
-        if (self::GIT_REF !== $ref) {
-            throw new RejectWebhookException(406, sprintf('Missing "%s".', $ref));
-        }
+        $this->validatePayload($request->getPayload());
 
         $this->validateSignature(
             headers: $request->headers,
@@ -77,6 +69,29 @@ final class GithubRequestParser extends AbstractRequestParser
             id: $request->headers->get($this->idHeaderName),
             payload: $request->getPayload()->all()
         );
+    }
+
+    protected function validateHeaders(HeaderBag $headers): void
+    {
+        foreach ([$this->signatureHeaderName, $this->eventHeaderName, $this->idHeaderName] as $header) {
+            if (!$headers->has($header)) {
+                throw new RejectWebhookException(406, sprintf('Missing "%s" HTTP request signature header.', $header));
+            }
+        }
+    }
+
+    protected function validatePayload(InputBag $payload): void
+    {
+        // demoブランチではない場合はエラー
+        $ref = $payload->get('ref');
+        if ($this->gitRef !== $ref) {
+            throw new RejectWebhookException(406, sprintf('Missing "%s".', $ref));
+        }
+
+        // プルリクがクローズドされていない場合はエラー
+        if (false === $payload->has('action') || 'closed' === $payload->get('action')) {
+            throw new RejectWebhookException(406, 'Pull Request is not closed.');
+        }
     }
 
     protected function validateSignature(HeaderBag $headers, string $body, #[\SensitiveParameter] string $secret): void
