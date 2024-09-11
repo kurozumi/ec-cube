@@ -26,7 +26,18 @@ final readonly class GithubWebhookConsumer implements ConsumerInterface
 {
     public function consume(RemoteEvent $event): void
     {
-        $process = new Process(['git', 'pull']);
+        $commands = [
+            ['git', 'pull'],
+            ['bin/console', 'cache:clear', '--no-warmup'],
+        ];
+        foreach($commands as $command) {
+            $this->runCommand($command);
+        }
+    }
+
+    protected function runCommand(array $command): void
+    {
+        $process = new Process($command);
         try {
             $process->mustRun(function ($type, $buffer) {
                 $buffer = trim($buffer);
